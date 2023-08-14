@@ -20,6 +20,9 @@ on:
 concurrency: ${{ github.workflow }}
 jobs:
   test-action:
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
