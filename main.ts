@@ -1,36 +1,65 @@
-#!/usr/bin/env node
-import { readFile } from "node:fs/promises"
-import { existsSync } from "node:fs"
-import process from "node:process"
-import { $ } from "execa"
-import * as core from "@actions/core"
-import { temporaryFile, temporaryWrite } from 'tempy';
+#!/usr/bin/env -S deno run -A
+import { readFile } from "node:fs/promises";
+import process from "node:process";
+import { $ } from "npm:execa";
+import * as core from "npm:@actions/core";
+import { temporaryFile, temporaryWrite } from "npm:tempy";
+import fg from "npm:fast-glob";
 
+// https://github.com/sindresorhus/execa#verbose-mode
+process.env.NODE_DEBUG = "execa";
+
+const path = core.getInput("path");
+const files = core.getMultilineInput("files");
+const source = core.getInput("source");
 const image = core.getInput("image");
-const files = core.getMultilineInput("files").map(x => fglob())
-const repository = core.getInput("repository");
-const githubServerURL = core.getInput("github_server_url");
+const latest = core.getBooleanInput("latest");
 
-const devcontainerFeature = await readFile("devcontainer-feature.json")
+process.chdir(path);
 
-const config = {
-  mediaType: "application/vnd.devcontainers",
-};
-const annotations = {
-  "$manifest": {
-    "com.github.package.type": "devcontainer_collection",
-    "dev.containers.metadata": JSON.stringify(devcontainerFeature),
-    "org.opencontainers.image.source": githubServerURL + "/" + repository,
-  }
-}
+const fileList = await fg(files, { exclude: [".git/**"] });
 
 const archivePath = temporaryFile();
-await $`tar -cvf ${archivePath} ${files}`;
+await $`tar -cvf ${archivePath} ${fileList}`;
 
-const configPath = temporaryWrite(JSON.stringify(config), { extension: "json" });
-const annotationsPath = temporaryWrite(JSON.stringify(annotations), { extension: "json" });
+const devcontainerFeature = JSON.parse(
+  await readFile("devcontainer-feature.json", "utf8")
+);
+
+const annotations = {
+  $manifest: {
+    "com.github.package.type": "devcontainer_collection",
+    "dev.containers.metadata": JSON.stringify(devcontainerFeature),
+    "org.opencontainers.image.source": source,
+  },
+  [archivePath]: {
+    "org.opencontainers.image.title": `devcontainer-feature-${devcontainerFeature.id}.tgz`,
+  },
+};
+const annotationsPath = temporaryWrite(JSON.stringify(annotations), {
+  extension: "json",
+});
+
 await $`oras push \
-  --config ${configPath} \
+  --config /dev/null:application/vnd.devcontainers \
   --annotation-file ${annotationsPath} \
-  ${image}:${tag} \
-  ${archivePath}:application/vnd.devcontainers.layer.v1+tar`
+  ${image}:${devcontainerFeature.version} \
+  ${archivePath}:application/vnd.devcontainers.layer.v1+tar`;
+
+const [major, minor, patch] = devcontainerFeature.version
+  .split(".")
+  .map((x) => parseInt(x));
+
+await $`oras tag \
+  ${image}:${devcontainerFeature.version} \
+  ${image}:${major}.${minor}`;
+
+await $`oras tag \
+  ${image}:${devcontainerFeature.version} \
+  ${image}:${major}`;
+
+if (latest) {
+  await $`oras tag \
+    ${image}:${devcontainerFeature.version} \
+    ${image}:latest`;
+}

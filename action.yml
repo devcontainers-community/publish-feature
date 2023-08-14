@@ -1,0 +1,24 @@
+inputs:
+  path:
+    default: ${{ github.action_path }}
+  files:
+    default: "**/*"
+  source:
+    default: ${{ github.server_url }}/${{ github.repository }}
+  image:
+    default: ghcr.io/${{ github.repository }}
+  latest:
+    default: true
+runs:
+  using: composite
+  steps:
+    - id: main
+      run: '"$GITHUB_ACTION_PATH/mainw"'
+      shell: bash
+      env:
+        INPUT_GITHUB_SERVER_URL: ${{ inputs.github-server-url }}
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_FILES: ${{ inputs.files }}
+        INPUT_REPOSITORY: ${{ inputs.repository }}
+        INPUT_IMAGE: ${{ inputs.image }}
+        INPUT_LATEST: ${{ inputs.latest }}
