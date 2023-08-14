@@ -1,13 +1,10 @@
 #!/usr/bin/env -S deno run -A
 import { readFile } from "node:fs/promises";
 import process from "node:process";
-import { $ } from "npm:execa";
+import { $ } from "npm:zx";
 import * as core from "npm:@actions/core";
 import { temporaryFile, temporaryWrite } from "npm:tempy";
 import fg from "npm:fast-glob";
-
-// https://github.com/sindresorhus/execa#verbose-mode
-process.env.NODE_DEBUG = "execa";
 
 const path = core.getInput("path");
 const files = core.getMultilineInput("files");
