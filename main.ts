@@ -15,7 +15,7 @@ const latest = core.getBooleanInput("latest");
 process.chdir(path);
 $.cwd = process.cwd();
 
-const fileList = await fg(files, { exclude: [".git/**"] });
+const fileList = await fg(files, { ignore: [".git/**"], dot: true });
 
 const archivePath = temporaryFile();
 await $`tar -cvf ${archivePath} ${fileList}`;
@@ -34,7 +34,7 @@ const annotations = {
     "org.opencontainers.image.title": `devcontainer-feature-${devcontainerFeature.id}.tgz`,
   },
 };
-const annotationsPath = temporaryWrite(JSON.stringify(annotations), {
+const annotationsPath = await temporaryWrite(JSON.stringify(annotations), {
   extension: "json",
 });
 
