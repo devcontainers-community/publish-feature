@@ -13,6 +13,7 @@ const image = core.getInput("image");
 const latest = core.getBooleanInput("latest");
 
 process.chdir(path);
+$.cwd = process.cwd();
 
 const fileList = await fg(files, { exclude: [".git/**"] });
 
