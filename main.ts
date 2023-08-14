@@ -26,7 +26,7 @@ const devcontainerFeature = JSON.parse(
 
 const annotations = {
   $manifest: {
-    "com.github.package.type": "devcontainer_collection",
+    "com.github.package.type": "devcontainer_feature",
     "dev.containers.metadata": JSON.stringify(devcontainerFeature),
     "org.opencontainers.image.source": source,
   },
