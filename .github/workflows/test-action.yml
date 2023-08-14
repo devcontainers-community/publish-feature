@@ -45,10 +45,6 @@ jobs:
           tree -a
           jq '' devcontainer-feature.json
           cat install.sh
-  reference-devcontainers-node:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: oras-project/setup-oras@v1
       - run: |
           pushd "$(mktemp -d)"
           oras manifest fetch ghcr.io/devcontainers/features/node:latest | jq
