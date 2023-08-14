@@ -1,6 +1,6 @@
 inputs:
   path:
-    default: ${{ github.action_path }}
+    default: .
   files:
     default: "**/*"
   source:
