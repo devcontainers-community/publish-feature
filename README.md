@@ -27,6 +27,9 @@ concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 jobs:
+  permissions:
+    contents: read
+    packages: write
   publish-feature:
     runs-on: ubuntu-latest
     steps:
@@ -62,7 +65,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.MY_FATURES_GITHUB_TOKEN }}
       - uses: devcontainers-community/publish-feature@v1
         with:
           image: ghcr.io/octocat/my-features/my-feature
