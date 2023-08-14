@@ -1,0 +1,6 @@
+# https://github.com/jcbhmr/deno_wrapper
+.deno
+
+# Logs
+logs
+*.log
