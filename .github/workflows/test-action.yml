@@ -36,8 +36,12 @@ jobs:
         with:
           path: test
           image: ghcr.io/${{ github.repository }}/hello
-      - run: oras manifest fetch ghcr.io/${{ github.repository }}/hello:latest
       - run: |
           pushd "$(mktemp -d)"
+          oras manifest fetch ghcr.io/${{ github.repository }}/hello:latest | jq
           oras pull ghcr.io/${{ github.repository }}/hello:latest
           tree -a
+          tar -xvf devcontainer-feature-hello.tgz
+          tree -a
+          jq '' devcontainer-feature.json
+          cat install.sh
