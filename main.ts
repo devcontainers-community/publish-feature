@@ -4,7 +4,7 @@ import process from "node:process";
 import { $ } from "npm:zx";
 import * as core from "npm:@actions/core";
 import { temporaryFile, temporaryWrite } from "npm:tempy";
-import fg from "npm:fast-glob";
+import { glob } from "npm:glob";
 
 const path = core.getInput("path");
 const files = core.getMultilineInput("files");
@@ -14,7 +14,7 @@ const latest = core.getBooleanInput("latest");
 process.chdir(path);
 $.cwd = process.cwd();
 
-const fileList = await fg(files, { ignore: [".git/**"], dot: true });
+const fileList = await glob(files.concat("[Rr][Ee][Aa][Dd][Mm][Ee].(md|mdown|markdown)", "[Ll][Ii][CcSs][Ee][Nn][CcSs][Ee]*", "devcontainer-feature.json"), { ignore: [".git/**"], dot: true });
 
 const archivePath = temporaryFile();
 await $`tar -cvf ${archivePath} ${fileList}`;
