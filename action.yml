@@ -6,7 +6,7 @@ inputs:
   source:
     default: ${{ github.server_url }}/${{ github.repository }}
   image:
-    default: ghcr.io/${{ github.repository }}
+    default: ghcr.io/${{ github.repository_owner }}/features/*
   latest:
     default: true
 runs:
