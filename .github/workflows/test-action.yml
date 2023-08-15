@@ -58,6 +58,7 @@ jobs:
     needs: publish-test
     runs-on: ubuntu-latest
     steps:
+      - run: npm install -g @devcontainers/cli
       - run: |
           set -ex
           temp_dir=$(mktemp -d)
