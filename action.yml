@@ -1,3 +1,8 @@
+name: Publish Dev Container Feature
+description: 💻 Publish a single Dev Container Feature
+branding:
+  icon: upload-cloud
+  color: blue
 inputs:
   path:
     default: .
