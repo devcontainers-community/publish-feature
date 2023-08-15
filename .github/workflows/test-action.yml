@@ -59,19 +59,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-        set -ex
-        temp_dir=$(mktemp -d)
-        trap 'rm -rf "$temp_dir"' SIGINT SIGTERM ERR EXIT
-        pushd "$temp_dir"
-        mkdir -p .devcontainer
-        cat <<EOF | tee .devcontainer/devcontainer.json
-        {
-          "image": "mcr.microsoft.com/devcontainers/base:debian",
-          "features": {
-            "ghcr.io/${{ github.repository }}/test": {}
+          set -ex
+          temp_dir=$(mktemp -d)
+          trap 'rm -rf "$temp_dir"' SIGINT SIGTERM ERR EXIT
+          pushd "$temp_dir"
+          mkdir -p .devcontainer
+          cat <<EOF | tee .devcontainer/devcontainer.json
+          {
+            "image": "mcr.microsoft.com/devcontainers/base:debian",
+            "features": {
+              "ghcr.io/${{ github.repository }}/test": {}
+            }
           }
-        }
-        EOF
-        tree -a
-        container_id=$(devcontainer up --workspace-folder . | jq -r .containerId)
-        docker kill "$container_id"
+          EOF
+          tree -a
+          container_id=$(devcontainer up --workspace-folder . | jq -r .containerId)
+          docker kill "$container_id"
