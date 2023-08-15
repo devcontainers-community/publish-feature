@@ -55,6 +55,7 @@ jobs:
           jq '' devcontainer-feature.json
           cat install.sh
   use-test:
+    needs: publish-test
     runs-on: ubuntu-latest
     steps:
       - run: |
