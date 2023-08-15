@@ -4,6 +4,7 @@
 
 <div align="center">
 
+<!-- TODO: Better header image -->
 ![](https://picsum.photos/600/400)
 
 </div>

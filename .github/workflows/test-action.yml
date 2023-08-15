@@ -19,7 +19,7 @@ on:
       - "!.github/workflows/test-action.yml"
 concurrency: ${{ github.workflow }}
 jobs:
-  test-action:
+  publish-test:
     permissions:
       contents: read
       packages: write
@@ -38,10 +38,10 @@ jobs:
           image: ghcr.io/${{ github.repository }}/*
       - run: |
           pushd "$(mktemp -d)"
-          oras manifest fetch ghcr.io/${{ github.repository }}/hello:latest | jq
-          oras pull ghcr.io/${{ github.repository }}/hello:latest
+          oras manifest fetch ghcr.io/${{ github.repository }}/test:latest | jq
+          oras pull ghcr.io/${{ github.repository }}/test:latest
           tree -a
-          tar -xvf devcontainer-feature-hello.tgz
+          tar -xvf devcontainer-feature-test.tgz
           tree -a
           jq '' devcontainer-feature.json
           cat install.sh
@@ -54,3 +54,23 @@ jobs:
           tree -a
           jq '' devcontainer-feature.json
           cat install.sh
+  use-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+        set -ex
+        temp_dir=$(mktemp -d)
+        trap 'rm -rf "$temp_dir"' SIGINT SIGTERM ERR EXIT
+        pushd "$temp_dir"
+        mkdir -p .devcontainer
+        cat <<EOF | tee .devcontainer/devcontainer.json
+        {
+          "image": "mcr.microsoft.com/devcontainers/base:debian",
+          "features": {
+            "ghcr.io/${{ github.repository }}/test": {}
+          }
+        }
+        EOF
+        tree -a
+        container_id=$(devcontainer up --workspace-folder . | jq -r .containerId)
+        docker kill "$container_id"
