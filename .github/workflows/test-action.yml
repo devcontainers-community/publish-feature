@@ -35,7 +35,7 @@ jobs:
       - uses: ./
         with:
           path: test
-          image: ghcr.io/${{ github.repository }}/hello
+          image: ghcr.io/${{ github.repository }}/*
       - run: |
           pushd "$(mktemp -d)"
           oras manifest fetch ghcr.io/${{ github.repository }}/hello:latest | jq

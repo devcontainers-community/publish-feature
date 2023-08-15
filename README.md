@@ -68,7 +68,8 @@ jobs:
           password: ${{ secrets.MY_FATURES_GITHUB_TOKEN }}
       - uses: devcontainers-community/publish-feature@v1
         with:
-          image: ghcr.io/octocat/my-features/my-feature
+          # The '*' will be replaced with 'id' from 'devcontainer-feature.json'.
+          image: ghcr.io/octocat/my-features/*
 ```
 
 ```jsonc
@@ -81,3 +82,9 @@ jobs:
 ```
 
 ### Inputs
+
+<!-- TODO: Describe inputs -->
+
+## Development
+
+<!-- TODO: Provide development blurb -->

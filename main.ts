@@ -9,7 +9,6 @@ import fg from "npm:fast-glob";
 const path = core.getInput("path");
 const files = core.getMultilineInput("files");
 const source = core.getInput("source");
-const image = core.getInput("image");
 const latest = core.getBooleanInput("latest");
 
 process.chdir(path);
@@ -23,6 +22,8 @@ await $`tar -cvf ${archivePath} ${fileList}`;
 const devcontainerFeature = JSON.parse(
   await readFile("devcontainer-feature.json", "utf8")
 );
+
+const image = core.getInput("image").replace("*", devcontainerFeature.id);
 
 const annotations = {
   $manifest: {
