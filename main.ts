@@ -62,3 +62,34 @@ if (latest) {
     ${image}:${devcontainerFeature.version} \
     ${image}:latest`;
 }
+
+for (const id of devcontainerFeature.legacyIds ?? []) {
+  const legacyImage = core.getInput("image").replace("*", id);
+  if (legacyImage === image) {
+    continue;
+  }
+
+  await $`oras push \
+    --config /dev/null:application/vnd.devcontainers \
+    --annotation-file ${annotationsPath} \
+    ${legacyImage}:${devcontainerFeature.version} \
+    ${archivePath}:application/vnd.devcontainers.layer.v1+tar`;
+  
+  const [major, minor, patch] = devcontainerFeature.version
+    .split(".")
+    .map((x) => parseInt(x));
+  
+  await $`oras tag \
+    ${legacyImage}:${devcontainerFeature.version} \
+    ${legacyImage}:${major}.${minor}`;
+  
+  await $`oras tag \
+    ${legacyImage}:${devcontainerFeature.version} \
+    ${legacyImage}:${major}`;
+  
+  if (latest) {
+    await $`oras tag \
+      ${legacyImage}:${devcontainerFeature.version} \
+      ${legacyImage}:latest`;
+  }
+}
