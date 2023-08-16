@@ -1,4 +1,5 @@
 {
   "id": "test",
+  "legacyIds": ["test-legacy"],
   "version": "1.0.0"
 }
