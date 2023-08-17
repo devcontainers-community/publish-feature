@@ -21,9 +21,8 @@ runs:
       run: '"$GITHUB_ACTION_PATH/mainw"'
       shell: bash
       env:
-        INPUT_GITHUB_SERVER_URL: ${{ inputs.github-server-url }}
         INPUT_PATH: ${{ inputs.path }}
         INPUT_FILES: ${{ inputs.files }}
-        INPUT_REPOSITORY: ${{ inputs.repository }}
+        INPUT_SOURCE: ${{ inputs.source }}
         INPUT_IMAGE: ${{ inputs.image }}
         INPUT_LATEST: ${{ inputs.latest }}
