@@ -14,7 +14,7 @@ const latest = core.getBooleanInput("latest");
 process.chdir(path);
 $.cwd = process.cwd();
 
-const fileList = await glob(files.concat("[Rr][Ee][Aa][Dd][Mm][Ee].(md|mdown|markdown)", "[Ll][Ii][CcSs][Ee][Nn][CcSs][Ee]*", "devcontainer-feature.json"), { ignore: [".git/**"], dot: true });
+const fileList = await glob(files.concat("[Rr][Ee][Aa][Dd][Mm][Ee].{md,mdown,markdown}", "[Ll][Ii][CcSs][Ee][Nn][CcSs][Ee]*", "devcontainer-feature.json"), { ignore: [".git/**"], dot: true });
 
 const archivePath = temporaryFile();
 await $`tar -cvf ${archivePath} ${fileList}`;
