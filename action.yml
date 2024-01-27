@@ -21,6 +21,7 @@ runs:
       with:
         version: 1.0.1
     - run: oras version
+      shell: bash
     - id: main
       run: '"$GITHUB_ACTION_PATH/mainw"'
       shell: bash
