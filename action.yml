@@ -18,6 +18,10 @@ runs:
   using: composite
   steps:
     - uses: oras-project/setup-oras@v1
+      with:
+        version: 1.0.0
+    - run: oras version
+      shell: bash
     - id: main
       run: '"$GITHUB_ACTION_PATH/mainw"'
       shell: bash
