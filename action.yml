@@ -19,7 +19,7 @@ runs:
   steps:
     - uses: oras-project/setup-oras@v1
       with:
-        version: 1.0.1
+        version: 1.0.0
     - run: oras version
       shell: bash
     - id: main
